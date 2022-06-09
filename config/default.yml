@@ -1,0 +1,4 @@
+# Default configuration
+
+projects:
+  - config/projects/hello.yml
