@@ -2,9 +2,12 @@ codename: "hello-example"
 name: "Hello example project"
 desc: "Example hello project to print hello world"
 tasks:
-  - kind: "command"
-    name: "Print hello world string"
-    value: echo 'Hello World!'
+  - name: "Print hello world string"
+    value:
+      kind: command
+      name: echo
+      args:
+        - "Hello World!"
 
 auth:
   tokens:

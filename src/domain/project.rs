@@ -22,11 +22,16 @@ fn default_enabled() -> bool {
     true
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "kind", rename_all = "camelCase")]
+pub enum TaskType {
+    Command { name: String, args: Vec<String> },
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Task {
-    pub kind: String,
     pub name: String,
-    pub value: String,
+    pub value: TaskType,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -57,6 +62,7 @@ impl Project {
 #[cfg(test)]
 mod tests {
     use super::Project;
+    use super::TaskType;
 
     #[test]
     fn load_example_hello_project() {
@@ -72,7 +78,13 @@ mod tests {
 
         // tasks
         assert_eq!(proj.tasks.len(), 1);
-        assert_eq!(proj.tasks[0].kind.as_str(), "command");
+        assert_eq!(
+            proj.tasks[0].value,
+            TaskType::Command {
+                name: "echo".to_string(),
+                args: vec!["Hello World!".to_string()]
+            }
+        );
         // auth
         assert_eq!(proj.auth.tokens.len(), 1);
         assert!(proj.auth.enabled);
