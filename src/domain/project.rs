@@ -1,6 +1,9 @@
 use std::path::Path;
 
+use actix_web::dev::AppConfig;
 use serde::{Deserialize, Serialize};
+
+use super::settings::AppSettings;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Project {
@@ -59,8 +62,25 @@ impl Project {
     }
 }
 
+pub fn load_projects<'t>(cfg: &'t AppSettings) -> Vec<Project> {
+    cfg.project_files
+        .iter()
+        .filter_map(|pth| match Project::load(pth) {
+            Ok(p) => Some(p),
+            Err(_) => {
+                log::error!("Unable to load project: {}", pth);
+                None
+            }
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
+
+    use crate::domain::settings::AppSettings;
+
+    use super::load_projects;
     use super::Project;
     use super::TaskType;
 
@@ -88,5 +108,12 @@ mod tests {
         // auth
         assert_eq!(proj.auth.tokens.len(), 1);
         assert!(proj.auth.enabled);
+    }
+
+    #[test]
+    fn load_example_projects() {
+        let cfg = AppSettings::load_default_config().unwrap();
+        let projects = load_projects(&cfg);
+        assert!(!projects.is_empty());
     }
 }
