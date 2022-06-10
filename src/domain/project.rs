@@ -1,6 +1,5 @@
 use std::path::Path;
 
-use actix_web::dev::AppConfig;
 use serde::{Deserialize, Serialize};
 
 use super::settings::AppSettings;
