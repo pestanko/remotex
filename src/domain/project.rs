@@ -2,7 +2,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-use super::settings::AppSettings;
+use super::{auth::Auth, settings::AppSettings};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Project {
@@ -13,7 +13,7 @@ pub struct Project {
     #[serde(default = "default_enabled")]
     pub enabled: bool,
     pub tasks: Vec<Task>,
-    pub auth: Authorization,
+    pub auth: Auth,
 }
 
 fn default_desc() -> String {
@@ -34,19 +34,6 @@ pub enum TaskType {
 pub struct Task {
     pub name: String,
     pub value: TaskType,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Authorization {
-    pub tokens: Vec<Token>,
-    #[serde(default = "default_enabled")]
-    pub enabled: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Token {
-    pub name: String,
-    pub value: String,
 }
 
 impl Project {
