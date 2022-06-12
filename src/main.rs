@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use anyhow::Ok;
 use remotex::domain::settings::AppSettings;
 use structopt::StructOpt;
@@ -7,7 +9,10 @@ async fn main() -> anyhow::Result<()> {
     env_logger::init();
     let args = CliApp::from_args();
 
-    let cfg = AppSettings::load_default_config()?;
+    let cfg = match &args.root {
+        Some(root) => AppSettings::load_config(Path::new(root))?,
+        None => AppSettings::load_default_config()?,
+    };
 
     println!("Loaded settings: {:?}", cfg);
 
