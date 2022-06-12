@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct AppSettings {
     #[serde(rename = "projects")]
-    pub project_files: Vec<String>,
+    pub project_names: Vec<String>,
     pub web: WebConfig,
     pub root_dir: Option<PathBuf>,
 }
@@ -14,7 +14,7 @@ pub struct AppSettings {
 impl Default for AppSettings {
     fn default() -> Self {
         Self {
-            project_files: vec![],
+            project_names: vec![],
             web: WebConfig::default(),
             root_dir: None,
         }
@@ -54,13 +54,13 @@ mod tests {
     #[test]
     fn load_example_hello_config() {
         let cfg = AppSettings::load_config(Path::new("examples/hello")).unwrap();
-        assert!(!cfg.project_files.is_empty())
+        assert!(!cfg.project_names.is_empty())
     }
 
     #[test]
     fn make_default_settings() {
         let cfg: AppSettings = AppSettings::default();
-        assert!(cfg.project_files.is_empty())
+        assert!(cfg.project_names.is_empty())
     }
 }
 impl Default for WebConfig {

@@ -54,7 +54,7 @@ pub fn load_projects<'t>(cfg: &'t AppSettings) -> Vec<Project> {
         .as_ref()
         .expect("Root directory has to initialized at this point");
 
-    cfg.project_files
+    cfg.project_names
         .iter()
         .filter_map(
             |name| match Project::load_file(make_project_path(root, name)) {
