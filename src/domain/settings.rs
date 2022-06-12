@@ -52,8 +52,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn load_real_config() {
-        let cfg = AppSettings::load_default_config().unwrap();
+    fn load_example_hello_config() {
+        let cfg = AppSettings::load_config(Path::new("examples/hello")).unwrap();
         assert!(!cfg.project_files.is_empty())
     }
 
