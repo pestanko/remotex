@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
@@ -49,20 +49,33 @@ impl Project {
 }
 
 pub fn load_projects<'t>(cfg: &'t AppSettings) -> Vec<Project> {
+    let root: &Path = cfg
+        .root_dir
+        .as_ref()
+        .expect("Root directory has to initialized at this point");
+
     cfg.project_files
         .iter()
-        .filter_map(|pth| match Project::load_file(pth) {
-            Ok(p) => Some(p),
-            Err(_) => {
-                log::error!("Unable to load project: {}", pth);
-                None
-            }
-        })
+        .filter_map(
+            |name| match Project::load_file(make_project_path(root, name)) {
+                Ok(p) => Some(p),
+                Err(_) => {
+                    log::error!("Unable to load project: {name}");
+                    None
+                }
+            },
+        )
         .collect()
+}
+
+fn make_project_path<'t>(root: &'t Path, name: &str) -> PathBuf {
+    root.join("projects").join(format!("{name}.yml"))
 }
 
 #[cfg(test)]
 mod tests {
+
+    use std::path::Path;
 
     use crate::domain::settings::AppSettings;
 
@@ -98,7 +111,7 @@ mod tests {
 
     #[test]
     fn load_example_projects() {
-        let cfg = AppSettings::load_default_config().unwrap();
+        let cfg = AppSettings::load_config(Path::new("examples/hello")).unwrap();
         let projects = load_projects(&cfg);
         assert!(!projects.is_empty());
     }
