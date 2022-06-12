@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use config::Config;
 use serde::{Deserialize, Serialize};
 
@@ -19,9 +21,13 @@ impl Default for AppSettings {
 
 impl AppSettings {
     pub fn load_default_config() -> anyhow::Result<Self> {
+        Self::load_config(Path::new("./config"))
+    }
+
+    pub fn load_config(root: &Path) -> anyhow::Result<Self> {
         let settings = Config::builder()
-            .add_source(config::File::with_name("config/default.yml"))
-            .add_source(config::File::with_name("config/local.yml").required(false))
+            .add_source(config::File::from(root.join("default.yml")))
+            .add_source(config::File::from(root.join("local.yml")).required(false))
             .add_source(config::Environment::with_prefix("REMOTEX"))
             .build()?;
 

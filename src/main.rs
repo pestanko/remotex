@@ -25,6 +25,8 @@ async fn main() -> anyhow::Result<()> {
 struct CliApp {
     #[structopt(subcommand)]
     pub sub: SubCmd,
+    #[structopt(short, long)]
+    pub root: Option<String>,
 }
 
 #[derive(Debug, StructOpt)]
