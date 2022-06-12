@@ -37,7 +37,7 @@ pub struct Task {
 }
 
 impl Project {
-    pub fn load<P: AsRef<Path> + std::fmt::Debug>(
+    pub fn load_file<P: AsRef<Path> + std::fmt::Debug>(
         pth: P,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         log::info!("Loading project: {:?}", pth);
@@ -51,7 +51,7 @@ impl Project {
 pub fn load_projects<'t>(cfg: &'t AppSettings) -> Vec<Project> {
     cfg.project_files
         .iter()
-        .filter_map(|pth| match Project::load(pth) {
+        .filter_map(|pth| match Project::load_file(pth) {
             Ok(p) => Some(p),
             Err(_) => {
                 log::error!("Unable to load project: {}", pth);
@@ -72,7 +72,7 @@ mod tests {
 
     #[test]
     fn load_example_hello_project() {
-        let proj = Project::load("examples/hello/projects/hello.yml").unwrap();
+        let proj = Project::load_file("examples/hello/projects/hello.yml").unwrap();
 
         assert_eq!(proj.codename.as_str(), "hello-example");
         assert_eq!(proj.name.as_str(), "Hello example project");
