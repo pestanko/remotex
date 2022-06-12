@@ -72,7 +72,7 @@ mod tests {
 
     #[test]
     fn load_example_hello_project() {
-        let proj = Project::load("config/projects/hello.yml").unwrap();
+        let proj = Project::load("examples/hello/projects/hello.yml").unwrap();
 
         assert_eq!(proj.codename.as_str(), "hello-example");
         assert_eq!(proj.name.as_str(), "Hello example project");

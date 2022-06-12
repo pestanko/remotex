@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use config::Config;
 use serde::{Deserialize, Serialize};
@@ -8,6 +8,7 @@ pub struct AppSettings {
     #[serde(rename = "projects")]
     pub project_files: Vec<String>,
     pub web: WebConfig,
+    pub root_dir: Option<PathBuf>,
 }
 
 impl Default for AppSettings {
@@ -15,6 +16,7 @@ impl Default for AppSettings {
         Self {
             project_files: vec![],
             web: WebConfig::default(),
+            root_dir: None,
         }
     }
 }
@@ -31,7 +33,8 @@ impl AppSettings {
             .add_source(config::Environment::with_prefix("REMOTEX"))
             .build()?;
 
-        let cfg: AppSettings = settings.try_deserialize()?;
+        let mut cfg: AppSettings = settings.try_deserialize()?;
+        cfg.root_dir = Some(root.into());
 
         log::debug!("Loaded config: {:?}", cfg);
 
