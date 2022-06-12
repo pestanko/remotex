@@ -23,5 +23,9 @@ tokio = { version = "1", features = ["full"] }
 # Web
 actix-web = "4"
 
+# Cli
+structopt = "0.3"
+
+
 [dev-dependencies]
 test-log = "*"
