@@ -3,22 +3,12 @@ use std::path::{Path, PathBuf};
 use config::Config;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct AppSettings {
     #[serde(rename = "projects")]
     pub project_names: Vec<String>,
     pub web: WebConfig,
     pub root_dir: Option<PathBuf>,
-}
-
-impl Default for AppSettings {
-    fn default() -> Self {
-        Self {
-            project_names: vec![],
-            web: WebConfig::default(),
-            root_dir: None,
-        }
-    }
 }
 
 impl AppSettings {

@@ -48,7 +48,7 @@ impl Project {
     }
 }
 
-pub fn load_projects<'t>(cfg: &'t AppSettings) -> Vec<Project> {
+pub fn load_projects(cfg: &AppSettings) -> Vec<Project> {
     let root: &Path = cfg
         .root_dir
         .as_ref()
@@ -68,7 +68,7 @@ pub fn load_projects<'t>(cfg: &'t AppSettings) -> Vec<Project> {
         .collect()
 }
 
-fn make_project_path<'t>(root: &'t Path, name: &str) -> PathBuf {
+fn make_project_path(root: &Path, name: &str) -> PathBuf {
     root.join("projects").join(format!("{name}.yml"))
 }
 

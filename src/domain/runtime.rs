@@ -32,7 +32,7 @@ async fn execute_task(proj: &Project, task: &Task) -> anyhow::Result<()> {
         )
     }
 
-    res.map_err(|e| e.into())
+    res
 }
 
 async fn execute_command(name: &str, args: &[String]) -> anyhow::Result<()> {
@@ -47,10 +47,10 @@ async fn execute_command(name: &str, args: &[String]) -> anyhow::Result<()> {
     log::trace!("Stderr: {:?}", proc.stderr);
 
     if !status.success() {
-        return Err(anyhow::anyhow!("Execution failed: {}", status).into());
+        return Err(anyhow::anyhow!("Execution failed: {}", status));
     }
 
-    return Ok(());
+    Ok(())
 }
 
 #[cfg(test)]

@@ -62,8 +62,7 @@ impl Credentials for PasswordCredentials {
     fn is_valid(&self, auth: &Auth) -> bool {
         auth.passwords
             .iter()
-            .find(|p| p.username == self.username && p.password == self.password)
-            .is_some()
+            .any(|p| p.username == self.username && p.password == self.password)
     }
 }
 
@@ -76,17 +75,9 @@ impl<U: Into<String>, P: Into<String>> From<(U, P)> for PasswordCredentials {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Default)]
 pub struct TokenCredentials {
     token: Option<String>,
-}
-
-impl Default for TokenCredentials {
-    fn default() -> Self {
-        Self {
-            token: Option::None,
-        }
-    }
 }
 
 impl Credentials for TokenCredentials {
@@ -118,7 +109,9 @@ impl TokenCredentials {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain::auth::{Auth, EmptyCredentials, Token, TokenCredentials, UsernamePassword, PasswordCredentials};
+    use crate::domain::auth::{
+        Auth, EmptyCredentials, PasswordCredentials, Token, TokenCredentials, UsernamePassword,
+    };
 
     #[test]
     fn no_auth_required_for_disabled_auth() {

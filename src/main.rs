@@ -17,8 +17,12 @@ async fn main() -> anyhow::Result<()> {
     println!("Loaded settings: {:?}", cfg);
 
     match args.sub {
-        SubCmd::Serve(_serve) => {
-            remotex::web::server::serve_web_server(cfg.clone()).await?;
+        SubCmd::Serve(serve) => {
+            let mut settings = cfg.clone();
+            if let Some(ref addr) = serve.addr {
+                settings.web.addr = addr.clone();
+            }
+            remotex::web::server::serve_web_server(settings).await?;
         }
     };
 
@@ -42,5 +46,5 @@ pub enum SubCmd {
 
 #[derive(Debug, StructOpt)]
 pub struct Serve {
-    pub bar: Option<String>,
+    pub addr: Option<String>,
 }
